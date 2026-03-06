@@ -66,3 +66,39 @@ python lab_01/ex03/ex03_01.py
 4. **Câu 04**: Truy cập và in ra phần tử đầu tiên và cuối cùng trong một `tuple`.
 5. **Câu 05**: Đếm số lần xuất hiện của mỗi phần tử trong `list` và lưu kết quả vào `dict`.
 6. **Câu 06**: Xóa một phần tử khỏi `dict` dựa trên `key` được cho trước.
+
+## 📝 Danh sách bài tập (Lab 02 - Mã Hóa Cơ Bản)
+Dự án Lab 02 xây dựng các thuật toán mã hoá và giải mã cơ bản thông qua web service sử dụng **Flask Framework**.
+
+### 📂 Cấu trúc thư mục Lab 02:
+
+```text
+lab-02/
+├── api.py                    # Server Flask cung cấp API mã hoá và giải mã
+├── requirements.txt          # Các thư viện phụ thuộc
+└── cipher/
+    ├── caesar/               # Bài 1: Thuật toán mã hoá Caesar
+    │   ├── alphabet.py
+    │   ├── caesar_cipher.py
+    │   └── __init__.py
+    └── vigenere/             # Bài 2: Thuật toán mã hoá Vigenère
+        ├── vigenere_cipher.py
+        └── __init__.py
+```
+
+### 🚀 Hướng dấn chạy ứng dụng Lab 02
+Tại thư mục gốc của bài lab, chạy server Flask bằng dòng lệnh sau:
+
+```powershell
+# Di chuyển vào folder Lab 02
+cd lab-02
+
+# Chạy server
+python api.py
+```
+
+Sau khi chạy thành công, có thể sử dụng **Postman** để test các API:
+- `POST /api/caesar/encrypt`
+- `POST /api/caesar/decrypt`
+- `POST /api/vigenere/encrypt`
+- `POST /api/vigenere/decrypt`
