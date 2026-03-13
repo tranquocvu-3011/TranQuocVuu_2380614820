@@ -68,37 +68,75 @@ python lab_01/ex03/ex03_01.py
 6. **Câu 06**: Xóa một phần tử khỏi `dict` dựa trên `key` được cho trước.
 
 ## 📝 Danh sách bài tập (Lab 02 - Mã Hóa Cơ Bản)
-Dự án Lab 02 xây dựng các thuật toán mã hoá và giải mã cơ bản thông qua web service sử dụng **Flask Framework**.
+Dự án Lab 02 xây dựng các thuật toán mã hoá và giải mã cơ bản thông qua web service sử dụng **Flask Framework**, đồng thời bổ sung giao diện web demo.
 
 ### 📂 Cấu trúc thư mục Lab 02:
 
 ```text
 lab-02/
-├── api.py                    # Server Flask cung cấp API mã hoá và giải mã
-├── requirements.txt          # Các thư viện phụ thuộc
+├── api.py                          # Flask API cho các thuật toán mã hoá/giải mã
+├── app.py                          # Flask Web UI (menu + form thao tác thuật toán)
+├── requirements.txt                # Các thư viện phụ thuộc
+├── templates/
+│   ├── index.html                  # Trang menu chọn thuật toán
+│   └── cipher_page.html            # Trang nhập liệu encrypt/decrypt
 └── cipher/
-    ├── caesar/               # Bài 1: Thuật toán mã hoá Caesar
+    ├── caesar/                     # Bài 1: Thuật toán Caesar
     │   ├── alphabet.py
     │   ├── caesar_cipher.py
     │   └── __init__.py
-    └── vigenere/             # Bài 2: Thuật toán mã hoá Vigenère
-        ├── vigenere_cipher.py
+    ├── vigenere/                   # Bài 2: Thuật toán Vigenere
+    │   ├── vigenere_cipher.py
+    │   └── __init__.py
+    ├── railfence/                  # Bài 3: Thuật toán Rail Fence
+    │   ├── railfence_cipher.py
+    │   └── __init__.py
+    ├── playfair/                   # Bài 4: Thuật toán Playfair
+    │   ├── playfair_cipher.py
+    │   └── __init__.py
+    └── transposition/              # Bài 5: Thuật toán Transposition
+        ├── transposition_cipher.py
         └── __init__.py
 ```
 
-### 🚀 Hướng dấn chạy ứng dụng Lab 02
-Tại thư mục gốc của bài lab, chạy server Flask bằng dòng lệnh sau:
+### 🚀 Hướng dẫn chạy ứng dụng Lab 02
+Tại thư mục gốc của bài lab:
 
 ```powershell
-# Di chuyển vào folder Lab 02
+# Di chuyển vào thư mục Lab 02
 cd lab-02
 
-# Chạy server
+# Chạy API server (port 5000)
 python api.py
+
+# Chạy Web UI server (port 5050)
+python app.py
 ```
 
-Sau khi chạy thành công, có thể sử dụng **Postman** để test các API:
+### 🔗 Danh sách API hiện có
+Sau khi chạy `python api.py`, có thể sử dụng **Postman** để test:
+
 - `POST /api/caesar/encrypt`
 - `POST /api/caesar/decrypt`
 - `POST /api/vigenere/encrypt`
 - `POST /api/vigenere/decrypt`
+- `POST /api/railfence/encrypt`
+- `POST /api/railfence/decrypt`
+- `POST /api/playfair/creatematrix`
+- `POST /api/playfair/encrypt`
+- `POST /api/playfair/decrypt`
+- `POST /api/transposition/encrypt`
+- `POST /api/transposition/decrypt`
+
+### 🌐 Giao diện web demo
+Sau khi chạy `python app.py`, truy cập:
+
+- `http://127.0.0.1:5050`
+
+Menu web hiện hỗ trợ các thuật toán:
+
+- Caesar
+- Vigenere
+- Rail Fence
+- Playfair
+- Transposition
