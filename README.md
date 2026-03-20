@@ -140,3 +140,67 @@ Menu web hiện hỗ trợ các thuật toán:
 - Rail Fence
 - Playfair
 - Transposition
+
+## 📝 Danh sách bài tập (Lab 03 - Lập Trình Giao Diện Ứng Dụng Bảo Mật)
+Dự án Lab 03 xây dựng các ứng dụng desktop demo sử dụng **PyQt5** kết hợp **Flask API** cho các thuật toán mã hoá: Caesar, RSA, ECC.
+
+### 📂 Cấu trúc thư mục Lab 03:
+
+```text
+lab-03/
+├── api.py                          # Flask API cho RSA và ECC
+├── app.py                          # Caesar cipher (local, không dùng API)
+├── caesar_cipher.py                # Caesar cipher desktop app (gọi API lab-02)
+├── rsa_cipher.py                   # RSA cipher desktop app (gọi API lab-03)
+├── ecc_cipher.py                   # ECC cipher desktop app (gọi API lab-03)
+├── requirements.txt                # PyQt5, requests, Flask, rsa, ecdsa
+├── cipher/
+│   ├── __init__.py
+│   ├── rsa/
+│   │   ├── __init__.py
+│   │   ├── rsa_cipher.py           # RSACipher class
+│   │   └── keys/                   # Chứa privateKey.pem, publicKey.pem
+│   └── ecc/
+│       ├── __init__.py
+│       ├── ecc_cipher.py           # ECCCipher class
+│       └── keys/                   # Chứa privateKey.pem, publicKey.pem
+├── platforms/                      # Qt platform plugins
+└── ui/
+    ├── __init__.py
+    ├── caesar.ui / caesar.py       # Giao diện Caesar
+    ├── rsa.ui / rsa.py             # Giao diện RSA (layout 2 cột)
+    └── ecc.ui / ecc.py             # Giao diện ECC
+```
+
+### 🚀 Hướng dẫn chạy ứng dụng Lab 03
+
+```powershell
+# Di chuyển vào thư mục Lab 03
+cd lab-03
+
+# Cài đặt thư viện
+pip install -r requirements.txt
+
+# Bài 3.5.1 - Caesar Cipher (dùng API lab-02, cần chạy lab-02/api.py trước)
+python caesar_cipher.py
+
+# Bài 3.5.2 & 3.5.3 - RSA & ECC (chạy API lab-03 trước)
+python api.py
+python rsa_cipher.py
+python ecc_cipher.py
+```
+
+### 🔗 Danh sách API Lab 03
+Sau khi chạy `python api.py` (port 5000):
+
+**RSA:**
+- `GET  /api/rsa/generate_keys`
+- `POST /api/rsa/encrypt`
+- `POST /api/rsa/decrypt`
+- `POST /api/rsa/sign`
+- `POST /api/rsa/verify`
+
+**ECC:**
+- `GET  /api/ecc/generate_keys`
+- `POST /api/ecc/sign`
+- `POST /api/ecc/verify`
