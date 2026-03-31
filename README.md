@@ -204,3 +204,36 @@ Sau khi chạy `python api.py` (port 5000):
 - `GET  /api/ecc/generate_keys`
 - `POST /api/ecc/sign`
 - `POST /api/ecc/verify`
+
+## 📝 Danh sách bài tập (Lab 04 - Mật Mã Học Ứng Dụng)
+Dự án Lab 04 tập trung xây dựng các giao thức truyền tin bảo mật trên nền tảng Socket & WebSocket, đồng thời vươn tới chuẩn mực giao diện hiển thị chuyên nghiệp nhất.
+> 👨‍💻 **Thiết kế & Thực hiện bởi: Trần Quốc Vũ - MSSV: 2380614820**
+
+### 📂 Cấu trúc thư mục Lab 04:
+
+```text
+lab-04/
+├── aes_rsa_socket/                 # Bài 4.6.1 + Điểm cộng UI xuất sắc
+│   ├── ui_server.py                # Server giao tiếp giao diện Enterprise (pyqtdarktheme)
+│   ├── ui_client.py                # Client đàm thoại giao diện Enterprise
+│   └── requirements.txt            
+├── dh_key_pair/                    # Bài 4.6.2
+│   ├── ui_dh.py                    # Giao diện cỗ máy trao đổi khóa Diffie-Hellman
+│   └── requirements.txt
+├── hash/                           # Bài 4.6.3
+│   ├── ui_hash.py                  # Giao diện băm All-In-One (MD5, SHA-256, BLAKE2...)
+│   └── requirements.txt
+├── websocket/                      # Bài 4.6.4
+│   ├── server.py                   # WebSocket Server (Tornado) cơ bản
+│   ├── client.py                   # WebSocket Client (Tornado) cơ bản
+│   └── requirements.txt
+└── websocket_extended/             # Bài 4.7 - Câu 4 (Bài tập phần nâng cao)
+    ├── aes_ws_server.py            # WebSocket Server xử lý tự động mã hóa AES
+    ├── aes_ws_client.py            # Console Client đa luồng (Multi-thread async)
+    └── requirements.txt
+```
+
+### 🚀 Điểm nhấn Kỹ thuật (Phần Cộng Điểm)
+- Tích hợp chuẩn giao diện **Enterprise UI (qdarktheme)** cho tất cả các Bài 4.6.1, 4.6.2 và 4.6.3. Giao diện trang bị Shadow, Status Bar, Colorized HTML Logs và bố cục QSplitter Responsive.
+- Nâng cấp **Bài tập mở rộng 4.7.4**: Trị triệt để lỗi xung đột Thread của Tornado khi nhập I/O Console (`RuntimeError: There is no current event loop`), hoàn thành trọn vẹn 100% đề bài nâng cao.
+
