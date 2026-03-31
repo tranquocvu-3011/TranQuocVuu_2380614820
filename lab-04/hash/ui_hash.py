@@ -1,95 +1,111 @@
 import sys
 import hashlib
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QLabel, QComboBox
+import qdarktheme
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QTextEdit, QVBoxLayout, 
+                             QHBoxLayout, QWidget, QPushButton, QLabel, QComboBox, QFrame)
 from PyQt5.QtCore import Qt
 from Crypto.Hash import SHA3_256
 
 class HashApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Hash Calculator")
-        self.resize(600, 450)
-        self.setStyleSheet("""
-            QWidget { 
-                font-family: 'Segoe UI', Arial, sans-serif; 
-                font-size: 13px; 
-                background-color: #f7f9fc;
-                color: #1e293b; 
-            }
-            QComboBox {
-                padding: 6px;
-                border: 1px solid #cbd5e1;
-                border-radius: 4px;
-                background-color: white;
-                font-weight: bold;
-                color: #0f172a;
-            }
-            QTextEdit { 
-                background: white; 
-                border: 1px solid #cbd5e1; 
-                border-radius: 4px; 
-                padding: 10px; 
-                color: #1e293b; 
-            }
-            QTextEdit:focus { border: 1px solid #3b82f6; }
-            QPushButton { 
-                background-color: #10b981; 
-                color: white; 
-                border: none; 
-                border-radius: 4px; 
-                padding: 12px; 
-                font-weight: bold; 
-                font-size: 14px; 
-            }
-            QPushButton:hover { background-color: #059669; }
-            QLabel.footer { color: #64748b; font-size: 12px; margin-top: 5px; }
-            QLabel.title { font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 5px; }
-        """)
+        self.setWindowTitle("Hash Matrix Studio - Enterprise")
+        self.resize(700, 550)
+        
+        # Setup modern dark theme from qdarktheme
+        qdarktheme.setup_theme("dark", custom_colors={"primary": "#8b5cf6"})
 
+        self.init_ui()
+
+    def init_ui(self):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(15)
+        layout.setContentsMargins(30, 30, 30, 20)
+        layout.setSpacing(20)
 
-        title = QLabel("Hash Generator")
-        title.setProperty("class", "title")
-        title.setAlignment(Qt.AlignCenter)
-        layout.addWidget(title)
+        # Header
+        header_layout = QHBoxLayout()
+        icon_label = QLabel("🛡️")
+        icon_label.setStyleSheet("font-size: 28px;")
         
-        combo_layout = QHBoxLayout()
-        combo_layout.addWidget(QLabel("Select Algorithm:"))
+        title_box = QVBoxLayout()
+        title = QLabel("HASH MATRIX STUDIO")
+        title.setStyleSheet("font-size: 20px; font-weight: bold; color: #8b5cf6; padding: 0;")
+        sub_title = QLabel("Advanced Cryptographic Hash Generator")
+        sub_title.setStyleSheet("font-size: 12px; color: #94a3b8;")
+        title_box.addWidget(title)
+        title_box.addWidget(sub_title)
+        
+        header_layout.addWidget(icon_label)
+        header_layout.addLayout(title_box)
+        header_layout.addStretch()
+        layout.addLayout(header_layout)
+        
+        # Algorithm Selection
+        algo_frame = QFrame()
+        algo_frame.setStyleSheet("QFrame { background: #1e293b; border-radius: 8px; }")
+        algo_layout = QHBoxLayout(algo_frame)
+        algo_layout.setContentsMargins(15, 10, 15, 10)
+        
+        lbl_algo = QLabel("Algorithm:")
+        lbl_algo.setStyleSheet("font-weight: bold; color: #cbd5e1;")
+        algo_layout.addWidget(lbl_algo)
+        
         self.algo_box = QComboBox()
         self.algo_box.addItems(["MD5 (Manual Simulation)", "MD5 (Library)", "SHA-256", "SHA-3 (PyCryptodome)", "BLAKE2"])
         self.algo_box.setCursor(Qt.PointingHandCursor)
-        combo_layout.addWidget(self.algo_box)
-        layout.addLayout(combo_layout)
+        self.algo_box.setMinimumWidth(250)
+        self.algo_box.setMinimumHeight(40)
+        self.algo_box.setStyleSheet("font-size: 14px; font-weight: bold;")
+        algo_layout.addWidget(self.algo_box)
+        algo_layout.addStretch()
+        layout.addWidget(algo_frame)
 
-        layout.addWidget(QLabel("Input Text:"))
+        # Input Box
+        layout.addWidget(QLabel("Input Data:"))
         self.input_text = QTextEdit()
-        self.input_text.setPlaceholderText("Enter text to hash...")
-        self.input_text.setFixedHeight(80)
+        self.input_text.setPlaceholderText("Paste or type data to hash here...")
+        self.input_text.setFixedHeight(100)
+        self.input_text.setStyleSheet("font-size: 15px; padding: 15px; border: 1px solid #475569; border-radius: 8px;")
         layout.addWidget(self.input_text)
         
-        self.btn_hash = QPushButton("Generate Hash")
+        # Action Button
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+        self.btn_hash = QPushButton("GENERATE HASH")
+        self.btn_hash.setMinimumWidth(200)
+        self.btn_hash.setMinimumHeight(45)
+        self.btn_hash.setStyleSheet("font-size: 15px; font-weight: bold; border-radius: 22px;")
         self.btn_hash.setCursor(Qt.PointingHandCursor)
         self.btn_hash.clicked.connect(self.compute_hash)
-        layout.addWidget(self.btn_hash)
+        btn_layout.addWidget(self.btn_hash)
+        btn_layout.addStretch()
+        layout.addLayout(btn_layout)
 
-        layout.addWidget(QLabel("Hash Output (Hex):"))
+        # Output Box
+        layout.addWidget(QLabel("Hash Digest (Hex):"))
         self.output_hash = QTextEdit()
         self.output_hash.setReadOnly(True)
-        self.output_hash.setStyleSheet("font-family: Consolas, monospace; font-size: 14px; color: #dc2626;")
-        self.output_hash.setFixedHeight(80)
+        self.output_hash.setStyleSheet("font-family: Consolas, monospace; font-size: 16px; color: #a7f3d0; background: #020617; border: 1px solid #334155; border-radius: 8px; font-weight: bold; padding: 15px;")
+        self.output_hash.setFixedHeight(90)
         layout.addWidget(self.output_hash)
         
+        layout.addStretch()
+        
+        # Footer
         footer = QLabel("Sinh viên thực hiện: Trần Quốc Vũ - MSSV: 2380614820")
-        footer.setProperty("class", "footer")
+        footer.setStyleSheet("color: #64748b; font-size: 12px; font-style: italic;")
         footer.setAlignment(Qt.AlignCenter)
         layout.addWidget(footer)
 
     def compute_hash(self):
         text = self.input_text.toPlainText().encode('utf-8')
+        if not text:
+            self.output_hash.setPlainText("Please enter input data.")
+            self.output_hash.setStyleSheet("font-family: Consolas; font-size: 16px; color: #ef4444; background: #020617; border: 1px solid #ef4444; border-radius: 8px; padding: 15px;")
+            return
+            
         algo_idx = self.algo_box.currentIndex()
         
         try:
@@ -105,12 +121,16 @@ class HashApp(QMainWindow):
                 res = h.hexdigest()
             elif algo_idx == 4:
                 res = hashlib.blake2b(text).hexdigest()
-            
+                
             self.output_hash.setPlainText(res)
+            self.output_hash.setStyleSheet("font-family: Consolas, monospace; font-size: 16px; color: #a7f3d0; background: #020617; border: 1px solid #3b82f6; border-radius: 8px; font-weight: bold; padding: 15px;")
         except Exception as e:
             self.output_hash.setPlainText(f"Error: {str(e)}")
+            self.output_hash.setStyleSheet("font-family: Consolas; font-size: 16px; color: #ef4444; background: #020617; border: 1px solid #ef4444; border-radius: 8px; padding: 15px;")
 
 if __name__ == '__main__':
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
     app = QApplication(sys.argv)
     window = HashApp()
     window.show()
