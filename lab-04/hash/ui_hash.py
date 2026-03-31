@@ -9,10 +9,9 @@ from Crypto.Hash import SHA3_256
 class HashApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Hash Matrix Studio - Enterprise")
+        self.setWindowTitle("Nền Tảng Băm Dữ Liệu - Enterprise")
         self.resize(700, 550)
         
-        # Setup modern dark theme from qdarktheme
         qdarktheme.setup_theme("dark", custom_colors={"primary": "#8b5cf6"})
 
         self.init_ui()
@@ -30,9 +29,9 @@ class HashApp(QMainWindow):
         icon_label.setStyleSheet("font-size: 28px;")
         
         title_box = QVBoxLayout()
-        title = QLabel("HASH MATRIX STUDIO")
+        title = QLabel("GIAO DIỆN BĂM TOÀN NĂNG")
         title.setStyleSheet("font-size: 20px; font-weight: bold; color: #8b5cf6; padding: 0;")
-        sub_title = QLabel("Advanced Cryptographic Hash Generator")
+        sub_title = QLabel("Bộ Công Cụ Băm Tiêu Chuẩn Mật Mã Học")
         sub_title.setStyleSheet("font-size: 12px; color: #94a3b8;")
         title_box.addWidget(title)
         title_box.addWidget(sub_title)
@@ -48,12 +47,12 @@ class HashApp(QMainWindow):
         algo_layout = QHBoxLayout(algo_frame)
         algo_layout.setContentsMargins(15, 10, 15, 10)
         
-        lbl_algo = QLabel("Algorithm:")
+        lbl_algo = QLabel("Thuật Toán:")
         lbl_algo.setStyleSheet("font-weight: bold; color: #cbd5e1;")
         algo_layout.addWidget(lbl_algo)
         
         self.algo_box = QComboBox()
-        self.algo_box.addItems(["MD5 (Manual Simulation)", "MD5 (Library)", "SHA-256", "SHA-3 (PyCryptodome)", "BLAKE2"])
+        self.algo_box.addItems(["MD5 (Mô phỏng thủ công)", "MD5 (Thư viện chuẩn)", "SHA-256", "SHA-3 (PyCryptodome)", "BLAKE2"])
         self.algo_box.setCursor(Qt.PointingHandCursor)
         self.algo_box.setMinimumWidth(250)
         self.algo_box.setMinimumHeight(40)
@@ -63,9 +62,9 @@ class HashApp(QMainWindow):
         layout.addWidget(algo_frame)
 
         # Input Box
-        layout.addWidget(QLabel("Input Data:"))
+        layout.addWidget(QLabel("Dữ Liệu Đầu Vào:"))
         self.input_text = QTextEdit()
-        self.input_text.setPlaceholderText("Paste or type data to hash here...")
+        self.input_text.setPlaceholderText("Dán hoặc gõ văn bản bạn muốn băm tại đây...")
         self.input_text.setFixedHeight(100)
         self.input_text.setStyleSheet("font-size: 15px; padding: 15px; border: 1px solid #475569; border-radius: 8px;")
         layout.addWidget(self.input_text)
@@ -73,7 +72,7 @@ class HashApp(QMainWindow):
         # Action Button
         btn_layout = QHBoxLayout()
         btn_layout.addStretch()
-        self.btn_hash = QPushButton("GENERATE HASH")
+        self.btn_hash = QPushButton("TIẾN HÀNH BĂM DỮ LIỆU")
         self.btn_hash.setMinimumWidth(200)
         self.btn_hash.setMinimumHeight(45)
         self.btn_hash.setStyleSheet("font-size: 15px; font-weight: bold; border-radius: 22px;")
@@ -84,7 +83,7 @@ class HashApp(QMainWindow):
         layout.addLayout(btn_layout)
 
         # Output Box
-        layout.addWidget(QLabel("Hash Digest (Hex):"))
+        layout.addWidget(QLabel("Kết Quả Mã Băm (Hex):"))
         self.output_hash = QTextEdit()
         self.output_hash.setReadOnly(True)
         self.output_hash.setStyleSheet("font-family: Consolas, monospace; font-size: 16px; color: #a7f3d0; background: #020617; border: 1px solid #334155; border-radius: 8px; font-weight: bold; padding: 15px;")
@@ -102,7 +101,7 @@ class HashApp(QMainWindow):
     def compute_hash(self):
         text = self.input_text.toPlainText().encode('utf-8')
         if not text:
-            self.output_hash.setPlainText("Please enter input data.")
+            self.output_hash.setPlainText("Vui lòng nhập văn bản hoặc dữ liệu.")
             self.output_hash.setStyleSheet("font-family: Consolas; font-size: 16px; color: #ef4444; background: #020617; border: 1px solid #ef4444; border-radius: 8px; padding: 15px;")
             return
             
@@ -125,7 +124,7 @@ class HashApp(QMainWindow):
             self.output_hash.setPlainText(res)
             self.output_hash.setStyleSheet("font-family: Consolas, monospace; font-size: 16px; color: #a7f3d0; background: #020617; border: 1px solid #3b82f6; border-radius: 8px; font-weight: bold; padding: 15px;")
         except Exception as e:
-            self.output_hash.setPlainText(f"Error: {str(e)}")
+            self.output_hash.setPlainText(f"Lỗi hệ thống: {str(e)}")
             self.output_hash.setStyleSheet("font-family: Consolas; font-size: 16px; color: #ef4444; background: #020617; border: 1px solid #ef4444; border-radius: 8px; padding: 15px;")
 
 if __name__ == '__main__':

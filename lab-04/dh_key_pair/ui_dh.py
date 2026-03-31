@@ -15,18 +15,17 @@ class WorkerThread(QThread):
     done_signal = pyqtSignal(object)
 
     def run(self):
-        self.log_signal.emit("<span style='color:#fbbf24'>> Generating DH parameters (2048-bit). This might take a minute...</span>")
+        self.log_signal.emit("<span style='color:#fbbf24'>> Đang tạo tham số P và G mạng DH (2048-bit). Quá trình có thể mất ít phút...</span>")
         parameters = dh.generate_parameters(generator=2, key_size=2048)
-        self.log_signal.emit("<span style='color:#10b981'>> Parameters generated successfully!</span>")
+        self.log_signal.emit("<span style='color:#10b981'>> Hàm tham số được tạo thành công!</span>")
         self.done_signal.emit(parameters)
 
 class DHKeyApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Diffie-Hellman Key Exchange - Enterprise")
+        self.setWindowTitle("Trao Đổi Khóa Diffie-Hellman Trực Quan")
         self.resize(950, 750)
         
-        # Setup modern dark theme from qdarktheme
         qdarktheme.setup_theme("dark", custom_colors={"primary": "#f59e0b"})
 
         self.alice_private = None
@@ -41,17 +40,17 @@ class DHKeyApp(QMainWindow):
         main_layout.setContentsMargins(20, 20, 20, 10)
         main_layout.setSpacing(15)
 
-        title = QLabel("🔑 Diffie-Hellman Parameter Sync Center")
+        title = QLabel("🔑 Trung Tâm Cấp Phát Khóa Diffie-Hellman")
         title.setStyleSheet("font-size: 20px; font-weight: bold; color: #f59e0b; margin-bottom: 5px;")
         main_layout.addWidget(title)
 
         # Server Group
-        setup_group = QGroupBox("Server Parameter Authority")
+        setup_group = QGroupBox("Máy Bộ Điều Hành Tham Số")
         setup_group.setStyleSheet("QGroupBox { font-size: 15px; font-weight: bold; border-radius: 8px; margin-top: 15px; }")
         setup_layout = QVBoxLayout()
         setup_layout.setContentsMargins(15, 25, 15, 15)
         
-        self.btn_gen_params = QPushButton("Generate Parameters & Keys")
+        self.btn_gen_params = QPushButton("Kích Hoạt & Cấp Phát Khóa")
         self.btn_gen_params.setMinimumHeight(45)
         self.btn_gen_params.setCursor(Qt.PointingHandCursor)
         self.btn_gen_params.clicked.connect(self.generate_params)
@@ -73,21 +72,21 @@ class DHKeyApp(QMainWindow):
         alice_layout = QVBoxLayout(alice_frame)
         alice_layout.setContentsMargins(0, 0, 5, 0)
         
-        alice_group = QGroupBox("👩 Alice Client")
+        alice_group = QGroupBox("👩 Client Alice")
         alice_group.setStyleSheet("QGroupBox { font-size: 15px; font-weight: bold; color: #ec4899; }")
         al_vbox = QVBoxLayout()
-        al_vbox.addWidget(QLabel("Public Key:"))
+        al_vbox.addWidget(QLabel("Khóa Công Khai (Public Key):"))
         self.txt_alice_pub = QTextEdit()
         self.txt_alice_pub.setReadOnly(True)
         self.txt_alice_pub.setStyleSheet("font-family: Consolas; font-size: 13px; color: #fbcfe8;")
         al_vbox.addWidget(self.txt_alice_pub)
-        al_vbox.addWidget(QLabel("Shared Secret:"))
+        al_vbox.addWidget(QLabel("Mã Bí Mật Chung (Shared Secret):"))
         self.txt_alice_shared = QTextEdit()
         self.txt_alice_shared.setReadOnly(True)
         self.txt_alice_shared.setFixedHeight(80)
         self.txt_alice_shared.setStyleSheet("font-family: Consolas; font-size: 14px; color: #bef264; font-weight: bold; border: 1px solid #10b981;")
         al_vbox.addWidget(self.txt_alice_shared)
-        self.btn_alice_compute = QPushButton("Compute Shared Secret")
+        self.btn_alice_compute = QPushButton("Tính Toán Mã Chung")
         self.btn_alice_compute.setMinimumHeight(40)
         self.btn_alice_compute.setCursor(Qt.PointingHandCursor)
         self.btn_alice_compute.setEnabled(False)
@@ -102,21 +101,21 @@ class DHKeyApp(QMainWindow):
         bob_layout = QVBoxLayout(bob_frame)
         bob_layout.setContentsMargins(5, 0, 0, 0)
         
-        bob_group = QGroupBox("👨 Bob Client")
+        bob_group = QGroupBox("👨 Client Bob")
         bob_group.setStyleSheet("QGroupBox { font-size: 15px; font-weight: bold; color: #3b82f6; }")
         bo_vbox = QVBoxLayout()
-        bo_vbox.addWidget(QLabel("Public Key:"))
+        bo_vbox.addWidget(QLabel("Khóa Công Khai (Public Key):"))
         self.txt_bob_pub = QTextEdit()
         self.txt_bob_pub.setReadOnly(True)
         self.txt_bob_pub.setStyleSheet("font-family: Consolas; font-size: 13px; color: #bfdbfe;")
         bo_vbox.addWidget(self.txt_bob_pub)
-        bo_vbox.addWidget(QLabel("Shared Secret:"))
+        bo_vbox.addWidget(QLabel("Mã Bí Mật Chung (Shared Secret):"))
         self.txt_bob_shared = QTextEdit()
         self.txt_bob_shared.setReadOnly(True)
         self.txt_bob_shared.setFixedHeight(80)
         self.txt_bob_shared.setStyleSheet("font-family: Consolas; font-size: 14px; color: #bef264; font-weight: bold; border: 1px solid #10b981;")
         bo_vbox.addWidget(self.txt_bob_shared)
-        self.btn_bob_compute = QPushButton("Compute Shared Secret")
+        self.btn_bob_compute = QPushButton("Tính Toán Mã Chung")
         self.btn_bob_compute.setMinimumHeight(40)
         self.btn_bob_compute.setCursor(Qt.PointingHandCursor)
         self.btn_bob_compute.setEnabled(False)
@@ -138,12 +137,12 @@ class DHKeyApp(QMainWindow):
         self.statusBar = QStatusBar()
         self.statusBar.setStyleSheet("background-color: #0f172a; color: #94a3b8;")
         self.setStatusBar(self.statusBar)
-        self.statusBar.showMessage("Idle - Waiting for parameter generation.")
+        self.statusBar.showMessage("Chờ - Hệ thống sẵn sàng.")
 
     def generate_params(self):
         self.btn_gen_params.setEnabled(False)
         self.log_setup.clear()
-        self.statusBar.showMessage("Generating P & G parameters...")
+        self.statusBar.showMessage("Đang tạo các hệ số nguyên thủy P & G...")
         
         self.worker = WorkerThread()
         self.worker.log_signal.connect(self.log_setup.append)
@@ -154,7 +153,7 @@ class DHKeyApp(QMainWindow):
         global global_parameters, alice_public_key, bob_public_key
         global_parameters = parameters
         
-        self.log_setup.append("<span style='color:#60a5fa'>> Generating Key Pairs for Alice and Bob...</span>")
+        self.log_setup.append("<span style='color:#60a5fa'>> Đang sinh Cặp Khóa (Key Pair) cho Alice và Bob...</span>")
         
         self.alice_private = parameters.generate_private_key()
         alice_public_key = self.alice_private.public_key()
@@ -172,8 +171,8 @@ class DHKeyApp(QMainWindow):
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         ).decode())
 
-        self.log_setup.append("<span style='color:#10b981'>> Key pairs distributed successfully. Waiting for clients to compute shared secret.</span>")
-        self.statusBar.showMessage("Parameter setup complete. Clients can now compute Shared Secret.")
+        self.log_setup.append("<span style='color:#10b981'>> Phân phát khóa thành công. Chờ hai Client đối chiếu.</span>")
+        self.statusBar.showMessage("Tham số đã xong. Client có thể tiến hành tính chung.")
         self.btn_alice_compute.setEnabled(True)
         self.btn_bob_compute.setEnabled(True)
 
@@ -183,7 +182,7 @@ class DHKeyApp(QMainWindow):
             shared_key = self.alice_private.exchange(bob_public_key)
             self.txt_alice_shared.setPlainText(shared_key.hex())
             self.btn_alice_compute.setEnabled(False)
-            self.statusBar.showMessage("Alice computed shared secret successfully.")
+            self.statusBar.showMessage("Alice đã tính thành công Mã Bí Mật Chung.")
 
     def bob_compute(self):
         global alice_public_key
@@ -191,7 +190,7 @@ class DHKeyApp(QMainWindow):
             shared_key = self.bob_private.exchange(alice_public_key)
             self.txt_bob_shared.setPlainText(shared_key.hex())
             self.btn_bob_compute.setEnabled(False)
-            self.statusBar.showMessage("Bob computed shared secret successfully.")
+            self.statusBar.showMessage("Bob đã tính thành công Mã Bí Mật Chung.")
 
 if __name__ == '__main__':
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)

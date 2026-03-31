@@ -18,7 +18,7 @@ class ClientSignals(QObject):
 class ClientApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("AES-RSA Client Enterprise")
+        self.setWindowTitle("Khách Máy AES-RSA Cấp Doanh Nghiệp")
         self.resize(600, 450)
         
         qdarktheme.setup_theme("dark", custom_colors={"primary": "#10b981"})
@@ -41,12 +41,12 @@ class ClientApp(QMainWindow):
         
         # Header Panel
         header = QHBoxLayout()
-        title_label = QLabel("💬 SECURE CHAT CONSOLE")
+        title_label = QLabel("💬 BẢNG ĐIỀU KHIỂN TIN NHẮN BẢO MẬT")
         title_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #10b981;")
         header.addWidget(title_label)
         header.addStretch()
         
-        self.connect_btn = QPushButton("Connect Securely")
+        self.connect_btn = QPushButton("Kích Hoạt Kết Nối")
         self.connect_btn.setMinimumWidth(150)
         self.connect_btn.setCursor(Qt.PointingHandCursor)
         self.connect_btn.clicked.connect(self.connect_server)
@@ -69,10 +69,10 @@ class ClientApp(QMainWindow):
         # Input Area
         input_layout = QHBoxLayout()
         self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Type your encrypted message here...")
+        self.input_field.setPlaceholderText("Nhập tin nhắn cần mã hóa tại đây...")
         self.input_field.setStyleSheet("padding: 10px; font-size: 14px; border-radius: 6px;")
         self.input_field.returnPressed.connect(self.send_msg)
-        self.send_btn = QPushButton("Send")
+        self.send_btn = QPushButton("Gửi")
         self.send_btn.setMinimumWidth(80)
         self.send_btn.setStyleSheet("padding: 10px; font-size: 14px; border-radius: 6px;")
         self.send_btn.setCursor(Qt.PointingHandCursor)
@@ -92,7 +92,7 @@ class ClientApp(QMainWindow):
         self.statusBar = QStatusBar()
         self.statusBar.setStyleSheet("background-color: #0f172a; color: #94a3b8;")
         self.setStatusBar(self.statusBar)
-        self.statusBar.showMessage("Disconnected.")
+        self.statusBar.showMessage("Đã ngắt kết nối.")
         
         self.input_field.setEnabled(False)
         self.send_btn.setEnabled(False)
@@ -101,9 +101,9 @@ class ClientApp(QMainWindow):
         if html_msg == "START_UI":
             self.input_field.setEnabled(True)
             self.send_btn.setEnabled(True)
-            self.connect_btn.setText("✔ Connected")
+            self.connect_btn.setText("✔ Đã Kết Nối")
             self.input_field.setFocus()
-            self.update_status("Line secured via Hybrid AES-RSA")
+            self.update_status("Đường truyền đã được bảo vệ kép AES-RSA")
         else:
             self.chat_area.append(html_msg)
             
@@ -112,8 +112,8 @@ class ClientApp(QMainWindow):
             
     def connect_server(self):
         self.connect_btn.setEnabled(False)
-        self.connect_btn.setText("Connecting...")
-        self.update_status("Connecting to server...")
+        self.connect_btn.setText("Đang kết nối...")
+        self.update_status("Đang kết nối đến máy chủ...")
         threading.Thread(target=self.run_connection, daemon=True).start()
         
     def run_connection(self):
@@ -123,7 +123,7 @@ class ClientApp(QMainWindow):
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((host, port))
             
-            self.signals.log_signal.emit("<span style='color:#3b82f6'>[SYSTEM] Handshaking RSA public key...</span>")
+            self.signals.log_signal.emit("<span style='color:#3b82f6'>[HỆ THỐNG] Đang thỏa thuận khóa công khai RSA...</span>")
             server_pub_bytes = self.socket.recv(2048)
             server_pub_key = serialization.load_pem_public_key(server_pub_bytes)
             
@@ -133,19 +133,17 @@ class ClientApp(QMainWindow):
             )
             self.socket.send(enc_session_key)
             
-            self.signals.log_signal.emit("<span style='color:#10b981'>✅ [SECURE LINE ESTABLISHED]</span> Ready to chat!")
+            self.signals.log_signal.emit("<span style='color:#10b981'>✅ [GIAO THỨC CHỐT CHẶN]</span> Sẵn sàng giao tiếp!")
             self.signals.log_signal.emit("START_UI")
             
         except Exception as e:
-            self.signals.log_signal.emit(f"<span style='color:#ef4444'>❌ [ERROR] Connection Failed:</span> {e}")
-            self.signals.status_signal.emit("Connection Error")
-            # We would normally re-enable button via a signal, doing it raw here might be unsafe for PyQt 
-            # but usually works for simple enabled state
+            self.signals.log_signal.emit(f"<span style='color:#ef4444'>❌ [LỖI] Lỗi kết nối:</span> {e}")
+            self.signals.status_signal.emit("Lỗi Kết Nối")
             
     def send_msg(self):
         text = self.input_field.text().strip()
         if text and self.socket:
-            self.chat_area.append(f"<span style='color:#34d399'><b>Me:</b></span> {text}")
+            self.chat_area.append(f"<span style='color:#34d399'><b>Tôi:</b></span> {text}")
             self.input_field.clear()
             
             try:
@@ -154,7 +152,7 @@ class ClientApp(QMainWindow):
                 ciphertext = cipher.encrypt(pad(text.encode('utf-8'), AES.block_size))
                 self.socket.send(iv + ciphertext)
             except Exception as e:
-                self.chat_area.append(f"<span style='color:#ef4444'>❌ Error: {e}</span>")
+                self.chat_area.append(f"<span style='color:#ef4444'>❌ Lỗi: {e}</span>")
 
 if __name__ == '__main__':
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)

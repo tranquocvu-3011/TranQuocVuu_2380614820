@@ -17,10 +17,9 @@ class ServerSignals(QObject):
 class ServerApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("AES-RSA Server Enterprise")
+        self.setWindowTitle("Máy Chủ AES-RSA Cấp Doanh Nghiệp")
         self.resize(700, 500)
         
-        # Setup modern dark theme from qdarktheme
         qdarktheme.setup_theme("dark", custom_colors={"primary": "#3b82f6"})
         
         self.signals = ServerSignals()
@@ -42,12 +41,12 @@ class ServerApp(QMainWindow):
         
         # Header Panel
         header = QHBoxLayout()
-        title_label = QLabel("🚀 SERVER EVENT LOG")
+        title_label = QLabel("🚀 NHẬT KÝ SỰ KIỆN MÁY CHỦ")
         title_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #3b82f6;")
         header.addWidget(title_label)
         header.addStretch()
         
-        self.start_btn = QPushButton("Start Server")
+        self.start_btn = QPushButton("Khởi Động Server")
         self.start_btn.setMinimumWidth(150)
         self.start_btn.setCursor(Qt.PointingHandCursor)
         self.start_btn.clicked.connect(self.start_server)
@@ -77,7 +76,7 @@ class ServerApp(QMainWindow):
         self.statusBar = QStatusBar()
         self.statusBar.setStyleSheet("background-color: #0f172a; color: #94a3b8;")
         self.setStatusBar(self.statusBar)
-        self.statusBar.showMessage("Idle - Ready to start.")
+        self.statusBar.showMessage("Chờ - Sẵn sàng khởi động.")
         
     def log(self, html_msg):
         self.log_area.append(html_msg)
@@ -87,8 +86,8 @@ class ServerApp(QMainWindow):
         
     def start_server(self):
         self.start_btn.setEnabled(False)
-        self.start_btn.setText("● Server is Running")
-        self.update_status("Starting socket listener...")
+        self.start_btn.setText("● Máy chủ Đang Chạy")
+        self.update_status("Đang thiết lập lắng nghe kết nối...")
         threading.Thread(target=self.run_socket, daemon=True).start()
         
     def run_socket(self):
@@ -98,15 +97,15 @@ class ServerApp(QMainWindow):
             server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             server_socket.bind((host, port))
             server_socket.listen(5)
-            self.signals.log_signal.emit(f"<span style='color:#10b981'>✅ [SYSTEM]</span> Server listening on port {port}...")
-            self.signals.status_signal.emit(f"Listening on {host}:{port}")
+            self.signals.log_signal.emit(f"<span style='color:#10b981'>✅ [HỆ THỐNG]</span> Máy chủ đang lắng nghe tại cổng {port}...")
+            self.signals.status_signal.emit(f"Đang lắng nghe tại {host}:{port}")
             
             while True:
                 client_socket, addr = server_socket.accept()
-                self.signals.log_signal.emit(f"<span style='color:#3b82f6'>🔗 [CONNECT]</span> Accepted connection from {addr}")
+                self.signals.log_signal.emit(f"<span style='color:#3b82f6'>🔗 [KẾT NỐI]</span> Chấp nhận kết nối từ {addr}")
                 threading.Thread(target=self.handle_client, args=(client_socket, addr), daemon=True).start()
         except Exception as e:
-            self.signals.log_signal.emit(f"<span style='color:#ef4444'>❌ [ERROR]</span> {e}")
+            self.signals.log_signal.emit(f"<span style='color:#ef4444'>❌ [LỖI]</span> {e}")
             
     def handle_client(self, client_socket, addr):
         try:
@@ -121,7 +120,7 @@ class ServerApp(QMainWindow):
                 enc_session_key,
                 padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
             )
-            self.signals.log_signal.emit(f"<span style='color:#f59e0b'>🔑 [CRYPTO]</span> Decrypted AES Session Key from {addr}")
+            self.signals.log_signal.emit(f"<span style='color:#f59e0b'>🔑 [BẢO MẬT]</span> Đã giải mã được Khóa Phiên AES từ {addr}")
             
             while True:
                 data = client_socket.recv(4096)
@@ -134,9 +133,9 @@ class ServerApp(QMainWindow):
                     
                     self.signals.log_signal.emit(f"<span style='color:#a7f3d0'>[{addr[1]}]:</span> <b>{plaintext.decode('utf-8')}</b>")
                 except Exception as e:
-                    self.signals.log_signal.emit(f"<span style='color:#ef4444'>❌ [ERROR]</span> Decrypt Failed: {e}")
+                    self.signals.log_signal.emit(f"<span style='color:#ef4444'>❌ [LỖI]</span> Lỗi Giải Mã: {e}")
         except Exception as e:
-            self.signals.log_signal.emit(f"<span style='color:#94a3b8'>🔌 [DISCONNECT]</span> {addr} has left.")
+            self.signals.log_signal.emit(f"<span style='color:#94a3b8'>🔌 [NGẮT KẾT NỐI]</span> {addr} đã ngắt kết nối.")
         finally:
             client_socket.close()
 
