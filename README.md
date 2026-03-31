@@ -237,3 +237,4 @@ lab-04/
 - Tích hợp chuẩn giao diện **Enterprise UI (qdarktheme)** cho tất cả các Bài 4.6.1, 4.6.2 và 4.6.3. Giao diện trang bị Shadow, Status Bar, Colorized HTML Logs và bố cục QSplitter Responsive.
 - Nâng cấp **Bài tập mở rộng 4.7.4**: Trị triệt để lỗi xung đột Thread của Tornado khi nhập I/O Console (`RuntimeError: There is no current event loop`), hoàn thành trọn vẹn 100% đề bài nâng cao.
 
+ 
