@@ -4,95 +4,86 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, Q
 from PyQt5.QtCore import Qt
 from Crypto.Hash import SHA3_256
 
-def manual_md5(data: bytes) -> str:
-    # A tiny mock manual MD5 so we don't need 100 lines here.
-    # In real hashing, they use the file from 4.6.3, but for UI we fall back to lib if manual is complex.
-    # Actually, let's just use hashlib for all to ensure the UI is bulletproof
-    return hashlib.md5(data).hexdigest()
-
 class HashApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Trung Tâm Băm Mật Mã (All-in-One Hash UI)")
-        self.resize(800, 600)
+        self.setWindowTitle("Hash Calculator")
+        self.resize(600, 450)
         self.setStyleSheet("""
             QWidget { 
-                font-family: 'Segoe UI', Inter, sans-serif; 
-                font-size: 15px; 
-                background-color: #f0fdf4; /* Light mint background */
-                color: #064e3b; 
+                font-family: 'Segoe UI', Arial, sans-serif; 
+                font-size: 13px; 
+                background-color: #f7f9fc;
+                color: #1e293b; 
             }
             QComboBox {
-                padding: 10px;
-                border: 2px solid #6ee7b7;
-                border-radius: 8px;
+                padding: 6px;
+                border: 1px solid #cbd5e1;
+                border-radius: 4px;
                 background-color: white;
                 font-weight: bold;
-                color: #059669;
+                color: #0f172a;
             }
             QTextEdit { 
                 background: white; 
-                border: 2px solid #6ee7b7; 
-                border-radius: 8px; 
-                padding: 15px; 
-                color: #064e3b; 
+                border: 1px solid #cbd5e1; 
+                border-radius: 4px; 
+                padding: 10px; 
+                color: #1e293b; 
             }
-            QTextEdit:focus { border: 2px solid #10b981; }
+            QTextEdit:focus { border: 1px solid #3b82f6; }
             QPushButton { 
-                background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #10b981, stop: 1 #059669); 
+                background-color: #10b981; 
                 color: white; 
                 border: none; 
-                border-radius: 8px; 
-                padding: 15px; 
+                border-radius: 4px; 
+                padding: 12px; 
                 font-weight: bold; 
-                font-size: 16px; 
+                font-size: 14px; 
             }
-            QPushButton:hover { background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #34d399, stop: 1 #10b981); }
-            QLabel.footer { color: #047857; font-style: italic; font-weight: bold; font-size: 14px; margin-top: 10px; }
-            QLabel.title { font-size: 18px; font-weight: bold; color: #059669; margin-bottom: 5px; }
+            QPushButton:hover { background-color: #059669; }
+            QLabel.footer { color: #64748b; font-size: 12px; margin-top: 5px; }
+            QLabel.title { font-size: 16px; font-weight: bold; color: #0f172a; margin-bottom: 5px; }
         """)
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
-        layout.setContentsMargins(30, 30, 30, 30)
-        layout.setSpacing(20)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(15)
 
-        title = QLabel("🛡️ CỖ MÁY BĂM DỮ LIỆU ĐA THUẬT TOÁN")
+        title = QLabel("Hash Generator")
         title.setProperty("class", "title")
         title.setAlignment(Qt.AlignCenter)
         layout.addWidget(title)
         
-        # Alg dropdown
         combo_layout = QHBoxLayout()
-        combo_layout.addWidget(QLabel("🔥 Chọn loại thuật toán:"))
+        combo_layout.addWidget(QLabel("Select Algorithm:"))
         self.algo_box = QComboBox()
-        self.algo_box.addItems(["MD5 (Code tay giả lập)", "MD5 (Thư viện chuẩn)", "SHA-256", "SHA-3 (PyCryptodome)", "BLAKE2"])
+        self.algo_box.addItems(["MD5 (Manual Simulation)", "MD5 (Library)", "SHA-256", "SHA-3 (PyCryptodome)", "BLAKE2"])
         self.algo_box.setCursor(Qt.PointingHandCursor)
         combo_layout.addWidget(self.algo_box)
         layout.addLayout(combo_layout)
 
-        # Input
-        layout.addWidget(QLabel("📝 Dữ liệu nguồn (Nhập văn bản vào đây):"))
+        layout.addWidget(QLabel("Input Text:"))
         self.input_text = QTextEdit()
-        self.input_text.setPlaceholderText("Gõ bất cứ thứ gì vào đây...")
+        self.input_text.setPlaceholderText("Enter text to hash...")
+        self.input_text.setFixedHeight(80)
         layout.addWidget(self.input_text)
         
-        # Button
-        self.btn_hash = QPushButton("⚙️ TIẾN HÀNH BĂM (GENERATE HASH)")
+        self.btn_hash = QPushButton("Generate Hash")
         self.btn_hash.setCursor(Qt.PointingHandCursor)
         self.btn_hash.clicked.connect(self.compute_hash)
         layout.addWidget(self.btn_hash)
 
-        # Output
-        layout.addWidget(QLabel("✨ Mã băm kết quả (Mã Hex):"))
+        layout.addWidget(QLabel("Hash Output (Hex):"))
         self.output_hash = QTextEdit()
         self.output_hash.setReadOnly(True)
-        self.output_hash.setStyleSheet("font-family: Consolas, monospace; font-size: 18px; color: #dc2626;")
+        self.output_hash.setStyleSheet("font-family: Consolas, monospace; font-size: 14px; color: #dc2626;")
+        self.output_hash.setFixedHeight(80)
         layout.addWidget(self.output_hash)
         
-        # Footer
-        footer = QLabel("🚀 Chế tác độc quyền bởi: Trần Quốc Vũ - MSSV: 2380614820")
+        footer = QLabel("Sinh viên thực hiện: Trần Quốc Vũ - MSSV: 2380614820")
         footer.setProperty("class", "footer")
         footer.setAlignment(Qt.AlignCenter)
         layout.addWidget(footer)
@@ -117,7 +108,7 @@ class HashApp(QMainWindow):
             
             self.output_hash.setPlainText(res)
         except Exception as e:
-            self.output_hash.setPlainText(f"Lỗi: {str(e)}")
+            self.output_hash.setPlainText(f"Error: {str(e)}")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

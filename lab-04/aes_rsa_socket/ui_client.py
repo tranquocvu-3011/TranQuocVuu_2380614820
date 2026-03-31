@@ -15,56 +15,52 @@ class ClientSignals(QObject):
 class ClientApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("AES-RSA Socket Client (Bản Cao Cấp)")
-        self.resize(700, 500)
+        self.setWindowTitle("AES-RSA Socket Client")
+        self.resize(550, 420)
         self.setStyleSheet("""
             QWidget { 
-                font-family: 'Segoe UI', Inter, Arial, sans-serif; 
-                font-size: 14px; 
+                font-family: 'Segoe UI', Arial, sans-serif; 
+                font-size: 13px; 
                 background-color: #0f172a; 
                 color: #f8fafc; 
             }
             QTextEdit, QLineEdit { 
                 background: #1e293b; 
                 border: 1px solid #334155; 
-                border-radius: 8px; 
-                padding: 12px; 
-                color: #a7f3d0; /* Soft green */
-                font-size: 14px;
+                border-radius: 6px; 
+                padding: 10px; 
+                color: #e2e8f0; 
             }
             QTextEdit { font-family: Consolas, monospace; }
-            QTextEdit:focus, QLineEdit:focus { border: 2px solid #10b981; }
+            QTextEdit:focus, QLineEdit:focus { border: 1px solid #10b981; }
             
             QPushButton { 
-                background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #10b981, stop: 1 #059669); 
+                background-color: #10b981; 
                 color: white; 
                 border: none; 
                 border-radius: 6px; 
-                padding: 12px; 
+                padding: 10px; 
                 font-weight: bold; 
-                font-size: 15px; 
             }
-            QPushButton:hover { 
-                background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #34d399, stop: 1 #10b981); 
-            }
+            QPushButton:hover { background-color: #059669; }
             QPushButton:disabled { background-color: #475569; color: #94a3b8; }
-            QLabel.footer { color: #94a3b8; font-style: italic; font-weight: bold; font-size: 13px; margin-top: 5px; }
-            QLabel.title { font-size: 18px; font-weight: bold; color: #34d399; margin-bottom: 5px; }
+            QLabel.footer { color: #94a3b8; font-style: italic; font-size: 12px; margin-top: 5px; }
+            QLabel.title { font-size: 14px; font-weight: bold; color: #34d399; margin-bottom: 2px; }
         """)
         
         self.signals = ClientSignals()
         self.signals.log_signal.connect(self.log)
         
         self.socket = None
-        self.session_key = os.urandom(16)  # AES-128
+        self.session_key = os.urandom(16)
         
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
-        layout.setContentsMargins(25, 25, 25, 20)
-        layout.setSpacing(15)
+        layout.setContentsMargins(15, 15, 15, 15)
+        layout.setSpacing(10)
         
-        lb_title = QLabel("💬 MÀN HÌNH GIAO TIẾP MẬT MÃ (CLIENT):")
+        lb_title = QLabel("Client Chat Console:")
         lb_title.setProperty("class", "title")
         layout.addWidget(lb_title)
         
@@ -74,23 +70,23 @@ class ClientApp(QMainWindow):
         
         input_layout = QHBoxLayout()
         self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Nhập tin nhắn để mã hóa...")
+        self.input_field.setPlaceholderText("Type a secure message...")
         self.input_field.returnPressed.connect(self.send_msg)
-        self.send_btn = QPushButton("🚀 PHÓNG (SEND)")
+        self.send_btn = QPushButton("Send")
         self.send_btn.clicked.connect(self.send_msg)
-        self.send_btn.setFixedWidth(140)
+        self.send_btn.setFixedWidth(80)
         self.send_btn.setCursor(Qt.PointingHandCursor)
         
         input_layout.addWidget(self.input_field)
         input_layout.addWidget(self.send_btn)
         layout.addLayout(input_layout)
         
-        self.connect_btn = QPushButton("🔄 KẾT NỐI VỚI SERVER")
+        self.connect_btn = QPushButton("Connect to Server")
         self.connect_btn.setCursor(Qt.PointingHandCursor)
         self.connect_btn.clicked.connect(self.connect_server)
         layout.addWidget(self.connect_btn)
         
-        footer = QLabel("👨‍💻 Sinh viên thực hiện: Trần Quốc Vũ - Đồ án Lab 4")
+        footer = QLabel("Sinh viên thực hiện: Trần Quốc Vũ - MSSV: 2380614820")
         footer.setProperty("class", "footer")
         footer.setAlignment(Qt.AlignCenter)
         layout.addWidget(footer)
@@ -102,14 +98,14 @@ class ClientApp(QMainWindow):
         if message == "START_UI":
             self.input_field.setEnabled(True)
             self.send_btn.setEnabled(True)
-            self.connect_btn.setText("🟢 BẢO MẬT ĐẦU CUỐI ĐÃ KÍCH HOẠT")
+            self.connect_btn.setText("Connected Securely")
             self.input_field.setFocus()
         else:
             self.chat_area.append(message)
             
     def connect_server(self):
         self.connect_btn.setEnabled(False)
-        self.connect_btn.setText("⏳ ĐANG DÒ TÌM PHIÊN BẢO MẬT...")
+        self.connect_btn.setText("Connecting...")
         threading.Thread(target=self.run_connection, daemon=True).start()
         
     def run_connection(self):
@@ -128,18 +124,18 @@ class ClientApp(QMainWindow):
             )
             self.socket.send(enc_session_key)
             
-            self.signals.log_signal.emit("✅ THIẾT LẬP KẾT NỐI THÀNH CÔNG QUA AES-RSA HYBRID!")
+            self.signals.log_signal.emit("Connected to Server securely via AES-RSA Hybrid Exchange!")
             self.signals.log_signal.emit("START_UI")
             
         except Exception as e:
-            self.signals.log_signal.emit(f"❌ Thất bại: {e}")
+            self.signals.log_signal.emit(f"Connection failed: {e}")
             self.connect_btn.setEnabled(True)
-            self.connect_btn.setText("🔄 LỖI MẠNG! THỬ LẠI LẦN NỮA")
+            self.connect_btn.setText("Retry Connection")
             
     def send_msg(self):
         text = self.input_field.text().strip()
         if text and self.socket:
-            self.chat_area.append(f"<span style='color:#ffffff'><b>Bạn:</b></span> {text}")
+            self.chat_area.append(f"<span style='color:#a7f3d0'><b>Me:</b></span> {text}")
             self.input_field.clear()
             
             try:
@@ -148,7 +144,7 @@ class ClientApp(QMainWindow):
                 ciphertext = cipher.encrypt(pad(text.encode('utf-8'), AES.block_size))
                 self.socket.send(iv + ciphertext)
             except Exception as e:
-                self.chat_area.append(f"❌ Error sending msg: {e}")
+                self.chat_area.append(f"Error sending msg: {e}")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
