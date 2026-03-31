@@ -64,7 +64,7 @@ class AESWebSocketClient:
                     self.io_loop.add_callback(self.io_loop.stop)
                     break
                 if self.connection:
-                    self.connection.write_message(msg)
+                    self.io_loop.add_callback(self.connection.write_message, msg)
             except EOFError:
                 break
 
