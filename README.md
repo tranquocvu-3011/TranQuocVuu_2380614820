@@ -237,4 +237,79 @@ lab-04/
 - Tích hợp chuẩn giao diện **Enterprise UI (qdarktheme)** cho tất cả các Bài 4.6.1, 4.6.2 và 4.6.3. Giao diện trang bị Shadow, Status Bar, Colorized HTML Logs và bố cục QSplitter Responsive.
 - Nâng cấp **Bài tập mở rộng 4.7.4**: Trị triệt để lỗi xung đột Thread của Tornado khi nhập I/O Console (`RuntimeError: There is no current event loop`), hoàn thành trọn vẹn 100% đề bài nâng cao.
 
- 
+## 📝 Danh sách bài tập (Lab 05 - Ứng Dụng Bảo Mật)
+Dự án Lab 05 tiếp tục xây dựng các ứng dụng bảo mật qua việc thực hành thuật toán Base64 và thiết lập giao tiếp thông qua socket có hỗ trợ SSL/TLS.
+
+### 📂 Cấu trúc thư mục Lab 05:
+
+```text
+lab-05/
+├── base64/                             # Bài thực hành 01: Base64
+│   ├── encrypt.py                      # Mã hóa chuỗi sang Base64 và ghi vào file
+│   └── decrypt.py                      # Đọc file và giải mã Base64
+└── ssl/                                # Bài thực hành 02: SSL Socket
+    ├── server.py                       # Server lắng nghe kết nối SSL
+    ├── client.py                       # Client kết nối tới Server qua SSL
+    └── certificates/                   # Cấu hình và chứng chỉ SSL SSL (OpenSSL)
+        ├── server-cert.cnf             # File cấu hình sinh chứng chỉ
+        ├── make-cert.bat               # Batch script chạy tự động để sinh chứng chỉ
+        ├── server-key.key              # Khóa bí mật máy chủ
+        └── server-cert.crt             # Chứng chỉ công khai máy chủ
+├── blockchain/                         # Bài thực hành 03: Blockchain
+│   ├── block.py                        # Class Block biểu diễn một khối
+│   ├── test_blockchain.py              # Script test logic hệ thống chuỗi
+│   └── blockchain.py                   # Lớp chính xử lý chuỗi khối
+└── img-hidden/                         # Bài thực hành 04: Giấu tin trong ảnh
+    ├── requirements.txt                # Yêu cầu cài đặt thư viện
+    ├── encrypt.py                      # Kịch bản mã hoá (giấu tin vào ảnh)
+    └── decrypt.py                      # Kịch bản giải mã (đọc tin từ ảnh)
+```
+
+### 🚀 Hướng dẫn chạy ứng dụng Lab 05
+
+**Bài thực hành 1: Mã hóa và Giải mã với Base64**
+```powershell
+cd lab-05/base64
+
+# Nhập chuỗi và mã hóa lưu vào data.txt
+python encrypt.py 
+
+# Đọc kết quả từ data.txt và giải mã
+python decrypt.py 
+```
+
+**Bài thực hành 2: SSL Socket - Tương tác Client/Server An toàn**
+Lưu ý: SSL được tạo thông qua `OpenSSL` sử dụng file cấu hình. Chứng chỉ cần thiết (*server-cert.crt*, *server-key.key*) đã được định sẵn thông qua batch file tương ứng.
+
+```powershell
+# Chuyển vào thư mục Bài 2
+cd lab-05/ssl
+
+# 1. Khởi động Server (chạy trước trên cổng 12345 với SSL TLS)
+python server.py
+
+# 2. Mở một terminal/PowerShell mới và chạy Client để kết nối
+python client.py
+```
+
+**Bài thực hành 3: Mô phỏng Blockchain cơ bản**
+```powershell
+cd lab-05/blockchain
+
+# Chạy kiểm tra chuỗi blockchain (Miner thử nghiệm và chạy xác minh chuỗi)
+python test_blockchain.py
+```
+
+**Bài thực hành 4: Giấu tin trong ảnh (Steganography)**
+```powershell
+cd lab-05/img-hidden
+
+# Khởi tạo Pillow & Cryptography
+pip install -r requirements.txt
+
+# Thực hiện mã hoá (Chuẩn bị 1 file ảnh bất kỳ tên là image.jpg)
+python encrypt.py image.jpg "Thong điệp bí mật HUTECH"
+
+# Đọc và giải mã lại từ bức ảnh đã đánh dấu
+python decrypt.py encoded_image.png 
+```
