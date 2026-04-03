@@ -21,7 +21,10 @@ class ClientApp(QMainWindow):
         self.setWindowTitle("Khách Máy AES-RSA Cấp Doanh Nghiệp")
         self.resize(600, 450)
         
-        qdarktheme.setup_theme("dark", custom_colors={"primary": "#10b981"})
+        try:
+            qdarktheme.setup_theme("dark", custom_colors={"primary": "#10b981"})
+        except Exception:
+            pass
         
         self.signals = ClientSignals()
         self.signals.log_signal.connect(self.log)

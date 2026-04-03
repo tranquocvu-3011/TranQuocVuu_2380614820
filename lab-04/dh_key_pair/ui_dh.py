@@ -26,7 +26,10 @@ class DHKeyApp(QMainWindow):
         self.setWindowTitle("Trao Đổi Khóa Diffie-Hellman Trực Quan")
         self.resize(950, 750)
         
-        qdarktheme.setup_theme("dark", custom_colors={"primary": "#f59e0b"})
+        try:
+            qdarktheme.setup_theme("dark", custom_colors={"primary": "#f59e0b"})
+        except Exception:
+            pass
 
         self.alice_private = None
         self.bob_private = None

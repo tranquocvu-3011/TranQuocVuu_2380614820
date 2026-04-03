@@ -12,7 +12,10 @@ class HashApp(QMainWindow):
         self.setWindowTitle("Nền Tảng Băm Dữ Liệu - Enterprise")
         self.resize(700, 550)
         
-        qdarktheme.setup_theme("dark", custom_colors={"primary": "#8b5cf6"})
+        try:
+            qdarktheme.setup_theme("dark", custom_colors={"primary": "#8b5cf6"})
+        except Exception:
+            pass
 
         self.init_ui()
 

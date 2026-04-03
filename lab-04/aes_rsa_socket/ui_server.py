@@ -20,7 +20,10 @@ class ServerApp(QMainWindow):
         self.setWindowTitle("Máy Chủ AES-RSA Cấp Doanh Nghiệp")
         self.resize(700, 500)
         
-        qdarktheme.setup_theme("dark", custom_colors={"primary": "#3b82f6"})
+        try:
+            qdarktheme.setup_theme("dark", custom_colors={"primary": "#3b82f6"})
+        except Exception:
+            pass
         
         self.signals = ServerSignals()
         self.signals.log_signal.connect(self.log)
